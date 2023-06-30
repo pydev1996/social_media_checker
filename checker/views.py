@@ -110,19 +110,28 @@ def socialmediaurl_list(request):
                'tiktoc_urls':tiktok_urls}
     return render(request, 'socialmediaurl_list.html',context)
 from django.http import HttpResponse
+from datetime import date
 def refresh_url(request):
     urls = SocialMediaURL.objects.all()
-    
+    today = date.today()
+    d1 = today.strftime("%d/%m/%Y")
     for i in urls:
+            if "twitter.com" in str(i):
+                status = SocialMediaURL.objects.get(hisposturl=str(i))
+                    
+                status.status_date=d1
+                status.save()
         
             if "youtube.com/watch?v="  in str(i) or "youtube.com/shorts" in str(i) :
                 if is_valid_youtube_url(str(i)):
                     status = SocialMediaURL.objects.get(hisposturl=str(i))
                     status.status = 'ON'
+                    status.status_date=d1
                     status.save()
                 else:
                     status = SocialMediaURL.objects.get(hisposturl=str(i))
                     status.status = 'OFF'
+                    status.status_date=d1
                     status.save()
             if "/www.tiktok.com/" in str(i):
                 
@@ -138,10 +147,12 @@ def refresh_url(request):
                         if response.status_code == 200:
                             status = SocialMediaURL.objects.get(hisposturl=str(i))
                             status.status = 'ON'
+                            status.status_date=d1
                             status.save()
                         else:
                             status = SocialMediaURL.objects.get(hisposturl=str(i))
                             status.status = 'OFF'
+                            status.status_date=d1
                             status.save()
                         break
                     except requests.exceptions.ConnectionError:
@@ -150,9 +161,12 @@ def refresh_url(request):
                             continue
                         status = SocialMediaURL.objects.get(hisposturl=str(i))
                         status.status = 'OFF'
+                        status.status_date=d1
                         status.save()
     return HttpResponse("Refresh complete")        
-def rfresh2():
+def refresh2(request):
+    today = date.today()
+    d1 = today.strftime("%d/%m/%Y")
     usr="6301708990"
     pwd="Naveen@111"
     options = webdriver.ChromeOptions()
@@ -189,16 +203,19 @@ def rfresh2():
                         print("OFF")
                         status=facebookURL.objects.get(url=str(i))
                         status.status="OFF"
+                        status.status_date=d1
                         status.save()
                     else:
                         print("ON")
                         status=facebookURL.objects.get(url=str(i))
                         status.status="ON"
+                        status.status_date=d1
                         status.save()
                 except:
                     print("ON")
                     status=facebookURL.objects.get(url=str(i))
                     status.status="ON"
+                    status.status_date=d1
                     status.save()   
     
 
@@ -245,8 +262,11 @@ def dashboard(request):
     youtube_off_count = 0
     tiktoc_on_count = 0
     tiktoc_off_count = 0
+    twitter_on_count = 0
+    twitter_off_count = 0
     y_status=[]
     t_status=[]
+    twitter_status=[]
     for i in urls2:
         if "youtube.com/watch?v=" in str(i):
             y_status.append(i.status)
@@ -261,20 +281,31 @@ def dashboard(request):
                 tiktoc_on_count+=1
             else:
                 tiktoc_off_count+=1
+        if "twitter.com/" in str(i):
+            
+            twitter_status.append(i.status)
+            if i.status=='ON':
+                twitter_on_count+=1
+            else:
+                twitter_off_count+=1
 
-    print(tiktoc_off_count)
+
+    
     context = {
         'total_on_count': total_on_count,
         'total_off_count': total_off_count,
         'fb_total_links':len(urls),
         'youtube_total_links':len(y_status),
         'tiktoc_total_links':len(t_status),
+        'twitter_total_links':len(twitter_status),
         'fb_on_count': fb_on_count,
         'fb_off_count': fb_off_count,
         'youtube_on_count': youtube_on_count,
         'youtube_off_count': youtube_off_count,
         'tiktoc_on_count': tiktoc_on_count,
         'tiktoc_off_count': tiktoc_off_count,
+        'twitter_on_count': twitter_on_count,
+        'twitter_off_count': twitter_off_count,
         'total': total,
         'profile':profile,
         'groups':groups,
@@ -335,10 +366,138 @@ def update_status2(request):
     }
     return JsonResponse(response)
  
+ #
+def results_all(request):
+    #urls = facebookURL.objects.all()
+    urls2 = SocialMediaURL.objects.all()
+    youtube_on_count = 0
+    youtube_off_count = 0
+    tiktoc_on_count = 0
+    tiktoc_off_count = 0
+    twitter_on_count = 0
+    twitter_off_count = 0
+    y_status=[]
+    t_status=[]
+    twitter_status=[]
+    for i in urls2:
+        if "youtube.com/watch?v=" in str(i):
+            y_status.append(i.status)
+            if i.status=='ON':
+                youtube_on_count+=1
+            else:
+                youtube_off_count+=1
+        if "/www.tiktok.com/" in str(i):
+            
+            t_status.append(i.status)
+            if i.status=='ON':
+                tiktoc_on_count+=1
+            else:
+                tiktoc_off_count+=1
+        if "twitter.com/" in str(i):
+            
+            twitter_status.append(i.status)
+            if i.status=='ON':
+                twitter_on_count+=1
+            else:
+                twitter_off_count+=1
 
 
+    
+    context = {
+        'urls':urls2,
+        'youtube_total_links':len(y_status),
+        'tiktoc_total_links':len(t_status),
+        'twitter_total_links':len(twitter_status),
+        'youtube_on_count': youtube_on_count,
+        'youtube_off_count': youtube_off_count,
+        'tiktoc_on_count': tiktoc_on_count,
+        'tiktoc_off_count': tiktoc_off_count,
+        'twitter_on_count': twitter_on_count,
+        'twitter_off_count': twitter_off_count,
+
+    }
+
+    return render(request, 'result_all.html', context)
+#
+
+def downloadreport_all_links(request):
+
+    urls = SocialMediaURL.objects.all()
+    youtube_urls = SocialMediaURL.objects.filter(hisposturl__icontains='youtube.com')
+    tiktok_urls = SocialMediaURL.objects.filter(hisposturl__icontains='/www.tiktok.com/')
+    twitter_urls = SocialMediaURL.objects.filter(hisposturl__icontains='twitter.com/')
+    
+    
+    context = {'urls':urls,
+                'youtube_urls': youtube_urls,
+                'twitter_urls': twitter_urls,
+               'tiktoc_urls':tiktok_urls}
+    return render(request, 'download_list.html',context)
 
 
+import openpyxl
+from django.http import HttpResponse, JsonResponse
+from .models import SocialMediaURL
+
+import openpyxl
+from django.http import HttpResponse
+from .models import SocialMediaURL
+
+def download_excel(request):
+    # Get the relevant data based on the selected category
+    category = request.GET.get('category')
+    
+    # Retrieve data for the selected category
+    data = None
+    if category == 'youtube':
+        data = SocialMediaURL.objects.filter(hisposturl__icontains='youtube.com')
+    elif category == 'twitter':
+        data = SocialMediaURL.objects.filter(hisposturl__icontains='twitter.com')
+    elif category == 'tiktok':
+        data = SocialMediaURL.objects.filter(hisposturl__icontains='/www.tiktok.com/')
+    else:
+        data = SocialMediaURL.objects.all()
+
+    # Create an Excel workbook and worksheet
+    workbook = openpyxl.Workbook()
+    worksheet = workbook.active
+
+    # Write the data to the worksheet
+    worksheet['A1'] = 'SL.NO.'
+    worksheet['B1'] = 'Date'
+    worksheet['C1'] = 'Who Post URL'
+    worksheet['D1'] = 'Who Screenshot'
+    worksheet['E1'] = 'His Post URL'
+    worksheet['F1'] = 'His Screenshot'
+    worksheet['G1'] = 'Reason for Reporting'
+    worksheet['H1'] = 'Specific Cause'
+    worksheet['I1'] = 'Violated Law'
+    worksheet['J1'] = 'Proposed Action'
+    worksheet['K1'] = 'Status Date'
+    worksheet['L1'] = 'Status'
+
+    for i, report in enumerate(data, start=2):
+        worksheet.cell(row=i, column=1, value=i - 1)
+        worksheet.cell(row=i, column=2, value=report.date)
+        worksheet.cell(row=i, column=3, value=report.whoposturl)
+        worksheet.cell(row=i, column=4, value=report.whoscreenshotimage.url if report.whoscreenshotimage else 'No Screenshot Available')
+        worksheet.cell(row=i, column=5, value=report.hisposturl)
+        worksheet.cell(row=i, column=6, value=report.hisscreenshotimage.url if report.hisscreenshotimage else 'No Screenshot Available')
+        worksheet.cell(row=i, column=7, value=report.reasonforreporting)
+        worksheet.cell(row=i, column=8, value=report.specificcause)
+        worksheet.cell(row=i, column=9, value=report.violated_law)
+        worksheet.cell(row=i, column=10, value=report.proposed_action)
+        worksheet.cell(row=i, column=11, value=report.status_date)
+        worksheet.cell(row=i, column=12, value=report.status)
+
+    # Create the HTTP response with the Excel file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=report.xlsx'
+
+    # Save the workbook to the response
+    workbook.save(response)
+
+    return response
 
 
 

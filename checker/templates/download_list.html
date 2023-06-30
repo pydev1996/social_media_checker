@@ -307,7 +307,11 @@
     <button class="tablinks" onclick="openCity(event, 'youtube')">Youtube</button>
     <button class="tablinks" onclick="openCity(event, 'twitter')">Twitter</button>
     <button class="tablinks" onclick="openCity(event, 'tiktok')">TikTok</button>
+    <button class="tablinks" onclick="downloadExcel()">Download Excel</button>
 </div>
+
+
+
 <div id="All" class="tabcontent">
     <table>
         <thead>
@@ -324,7 +328,7 @@
                 <th>Proposed Action</th>
                 <th>Status date</th>
                 <th>Status</th>
-                <th>Actions</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -354,9 +358,7 @@
                 <td>{{ report.proposed_action }}</td>
                 <td>{{ report.status_date }}</td>
                 <td>{{ report.status }}</td>
-                <td>
-                    <button class="edit-button" data-url="{{ report.hisposturl }}" type="button">Edit</button>
-                </td>
+               
             </tr>
             {% empty %}
             <tr>
@@ -383,7 +385,7 @@
                 <th>Proposed Action</th>
                 <th>Status date</th>
                 <th>Status</th>
-                <th>Actions</th>
+               
             </tr>
         </thead>
         <tbody>
@@ -413,9 +415,7 @@
                 <td>{{ report.proposed_action }}</td>
                 <td>{{ report.status_date }}</td>
                 <td>{{ report.status }}</td>
-                <td>
-                    <button class="edit-button" data-url="{{ report.hisposturl }}" type="button">Edit</button>
-                </td>
+               
             </tr>
             {% empty %}
             <tr>
@@ -442,7 +442,7 @@
                 <th>Proposed Action</th>
                 <th>Status Date</th>
                 <th>Status</th>
-                <th>Actions</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -472,9 +472,7 @@
                 <td>{{ report.proposed_action }}</td>
                 <td>{{ report.status_date }}</td>
                 <td>{{ report.status }}</td>
-                <td>
-                    <button class="edit-button" data-url="{{ report.hisposturl }}" type="button">Edit</button>
-                </td>
+              
             </tr>
             {% empty %}
             <tr>
@@ -501,7 +499,7 @@
                 <th>Proposed Action</th>
                 <th>Status Date</th>
                 <th>Status</th>
-                <th>Actions</th>
+               
             </tr>
         </thead>
         <tbody>
@@ -531,9 +529,7 @@
                 <td>{{ report.proposed_action }}</td>
                 <td>{{ report.status_date }}</td>
                 <td>{{ report.status }}</td>
-                <td>
-                    <button class="edit-button" data-url="{{ report.hisposturl }}" type="button">Edit</button>
-                </td>
+               
             </tr>
             {% empty %}
             <tr>
@@ -543,8 +539,9 @@
         </tbody>
     </table>
 </div>
-
 <script>
+    var currentTab = "All"; // Variable to store the current tab
+    
     function openCity(event, cityName) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
@@ -557,24 +554,43 @@
         }
         document.getElementById(cityName).style.display = "block";
         event.currentTarget.className += " active";
+        
+        currentTab = cityName; // Update the current tab
     }
-
+    
+    function downloadExcel() {
+        // Create an XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/download-excel?category=" + currentTab, true);
+        xhr.responseType = "blob";
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Create a temporary link element to download the Excel file
+                var url = window.URL.createObjectURL(xhr.response);
+                var link = document.createElement("a");
+                link.href = url;
+                link.download = currentTab + "_report.xlsx";
+                link.click();
+                
+                // Cleanup
+                setTimeout(function() {
+                    window.URL.revokeObjectURL(url);
+                    link.remove();
+                }, 100);
+            }
+        };
+        
+        xhr.send();
+    }
+    
     // By default, display the "All" tab content
     document.getElementById("defaultOpen").click();
 </script>
 
+
     <!-- Popup for updating status -->
-    <div id="popup">
-        <div id="popup-content">
-            <h2>Update Status</h2>
-            <label for="url-input">URL:</label>
-            <input type="text" id="url-input" readonly>
-            <label for="status-input">New Status:</label>
-            <input type="text" id="status-input">
-            <button id="update-button">Update</button>
-            <button id="close-button">Close</button>
-        </div>
-    </div>
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Function to get CSRF token from cookies

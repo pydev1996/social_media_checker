@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background-color: white;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 20px;
+        }
+
+        .box {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .count {
+            font-size: 36px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #333333;
+        }
+
+        h1 {
+            color: #333333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .status-container {
+            margin-top: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .status-title {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #555555;
+        }
+
+        .status-count {
+            font-weight: bold;
+            color: #333333;
+        }
+        body {
+            font-family: "Segoe UI",Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+        th {
+            background-color: #007bff;
+            color: #fff;
+            padding: 6px;
+            text-align: center;
+        }
+        td {
+            padding: 6px;
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-height: 50px;
+        }
+     
+
+
+.refresh_button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+
+.button-container {
+    text-align:center;
+    margin:1em 0;
+}
+.refresh_button {
+    display: inline-block;
+    border:1px solid darken(#212121,50%);
+    outline:none;
+    padding:10px 20px;
+    line-height: 1.4;
+    background: #212121; 
+    background: linear-gradient(to bottom,  lighten(#212121,20%) 0%,lighten(#212121,15%) 50%,darken(#212121,5%) 51%,darken(#212121,2.5%) 100%);      
+    border-radius: 4px;
+    border: 1px solid darken(#212121,30%);
+    color:lighten(silver,10%);
+    text-shadow: darken(silver,80%) -1px -1px 0px;
+    
+    position: relative;
+    transition: padding-right .3s ease;
+    font-weight:700;
+    box-shadow:0 1px 0 lighten(#212121,30%) inset, 0px 1px 0 lighten(#212121,10%);
+    
+}
+
+.refresh_button:hover {
+    box-shadow:0 0 10px darken(#17eb81,10%) inset, 0px 1px 0 lighten(#212121,10%);
+    color:lighten(silver,20%);
+}
+
+.refresh_button:active{
+    box-shadow:0 0 10px darken(#212121,10%) inset, 0px 1px 0 lighten(#212121,10%);
+    color:lighten(silver,30%);
+    background: darken(#212121,10%); 
+    background: linear-gradient(to bottom,  lighten(#212121,10%) 0%,lighten(#212121,5%) 50%,darken(#212121,5%) 51%,darken(#212121,10%) 100%);  
+    
+}
+
+.refresh_button.spinning {
+    background-color: #212121;
+    padding-right: 40px;
+}
+.refresh_button.spinning:after {
+    content: '';
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    box-shadow: 0px 0px 0 1px darken(#212121,10%);
+    position: absolute;
+    border-radius: 50%;
+    animation: rotate360 .5s infinite linear, exist .1s forwards ease;
+}
+
+.refresh_button.spinning:before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    border-radius: 50%;
+    right: 6px;
+    top: 50%;
+    position: absolute;
+    border: 2px solid darken(#212121,40%);
+    border-right: 3px solid #27ae60;
+    animation: rotate360 .5s infinite linear, exist .1s forwards ease ;
+    
+}
+
+
+
+@keyframes rotate360 { 
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes exist { 
+    100% {
+        width: 15px;
+        height: 15px;
+        margin: -8px 5px 0 0;
+    }
+}
+
+
+
+   
+    </style>
+   <script>
+    $(function(){
+    
+    var refresh_button = document.querySelector('.refresh_button');
+    
+    refresh_button.addEventListener("click", function() {
+        refresh_button.innerHTML = "Refreshing";
+        refresh_button.classList.add('spinning');
+        
+      setTimeout( 
+            function  (){  
+                refresh_button.classList.remove('spinning');
+                refresh_button.innerHTML = "Refresh Status";
+                
+            }, 6000);
+    }, false);
+    
+});
+</script> 
+   
+       
+</head>
+<body>
+    
+    <div class="button-container">
+        <button  class="refresh_button" onclick="refreshUrl()">Check weekly</button>
+        
+    </div>
+    <div class="dashboard-grid">
+        
+        <div class="box" style="background-color: #66cc66; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #ffffff; font-size: 24px;">YouTube</h3>
+            <div class="status-container">
+                <div class="status-item">
+                    <span class="status-title">Total Links:</span>
+                    <span class="status-count">{{ youtube_total_links }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Active:</span>
+                    <span class="status-count">{{ youtube_on_count }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Blocked:</span>
+                    <span class="status-count">{{ youtube_off_count }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="box" style="background-color: #cc667c; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #ffffff; font-size: 24px;">TikToc</h3>
+            <div class="status-container">
+                <div class="status-item">
+                    <span class="status-title">Total Links:</span>
+                    <span class="status-count">{{ tiktoc_total_links }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Active:</span>
+                    <span class="status-count">{{ tiktoc_on_count }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Blocked:</span>
+                    <span class="status-count">{{ tiktoc_off_count }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="box" style="background-color: #ec2d0b; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #ffffff; font-size: 24px;">Twitter</h3>
+            <div class="status-container">
+                <div class="status-item">
+                    <span class="status-title">Total Links:</span>
+                    <span class="status-count">{{ twitter_total_links }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Active:</span>
+                    <span class="status-count">{{ twitter_on_count }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Blocked:</span>
+                    <span class="status-count">{{ twitter_off_count }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div id="All" class="tabcontent">
+        <table>
+            <thead>
+                <tr>
+                    <th>SL.NO.</th>
+                    <th>Date</th>
+                    <th>Who Post URL</th>
+                    <th>Who Screenshot</th>
+                    <th>His Post URL</th>
+                    <th>His Screenshot</th>
+                    <th>Reason for Reporting</th>
+                    <th>Specific Cause</th>
+                    <th>Violated Law</th>
+                    <th>Proposed Action</th>
+                    <th>Status date</th>
+                    <th>Status</th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in urls %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ report.date }}</td>
+                    <td>{{ report.whoposturl }}</td>
+                    <td>
+                        {% if report.whoscreenshotimage %}
+                            <img src="{{ report.whoscreenshotimage.url }}" alt="Who Screenshot">
+                        {% else %}
+                            No Screenshot Available
+                        {% endif %}
+                    </td>
+                    <td>{{ report.hisposturl }}</td>
+                    <td>
+                        {% if report.hisscreenshotimage %}
+                            <img src="{{ report.hisscreenshotimage.url }}" alt="His Screenshot">
+                        {% else %}
+                            No Screenshot Available
+                        {% endif %}
+                    </td>
+                    <td>{{ report.reasonforreporting }}</td>
+                    <td>{{ report.specificcause }}</td>
+                    <td>{{ report.violated_law }}</td>
+                    <td>{{ report.proposed_action }}</td>
+                    <td>{{ report.status_date }}</td>
+                    <td>{{ report.status }}</td>
+                    
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="12">No reports available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Function to get CSRF token from cookies
+        function getCSRFToken() {
+            var cookieValue = null;
+            var name = 'csrftoken';
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+            return cookieValue;
+        }
+
+        // Refresh button click event handler
+        function refreshUrl() {
+            var csrftoken = getCSRFToken();  // Get CSRF token
+            var url = '/refresh-url/';  // Replace with the actual URL of your refresh URL endpoint
+
+            // Send AJAX request
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },  // Include CSRF token in headers
+                success: function(response) {
+                    console.log('Refresh successful');
+                },
+                error: function(error) {
+                    console.error('Refresh failed', error);
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

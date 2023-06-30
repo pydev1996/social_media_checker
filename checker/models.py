@@ -1,7 +1,9 @@
 from django.db import models
 
 import datetime
-
+from datetime import date
+today = date.today()
+d1 = today.strftime("%d/%m/%Y")
 class SocialMediaURL(models.Model):
     whoposturl = models.URLField(default='')
     whoscreenshotimage = models.ImageField(upload_to='screenshots/', default='')
@@ -12,7 +14,7 @@ class SocialMediaURL(models.Model):
     violated_law = models.TextField(null=True)
     proposed_action = models.TextField(null=True)
     date = models.DateField(default=datetime.date.today)
-    status_date = models.CharField(max_length=50,default='',null=True)
+    status_date = models.CharField(max_length=50,default=d1,null=True)
     status=models.CharField(max_length=255, default='',null=True)
 
 
@@ -30,7 +32,7 @@ class facebookURL(models.Model):
     imp_person_category = models.CharField(max_length=100)
     priority_category = models.CharField(max_length=100)
     subcategory=models.CharField(max_length=50,default='',null=True)
-    status_date = models.CharField(max_length=50,default='',null=True)
+    status_date = models.CharField(max_length=50,default=d1,null=True)
     status = models.CharField(max_length=50,default='',null=True)
     def __str__(self):
         return self.url
