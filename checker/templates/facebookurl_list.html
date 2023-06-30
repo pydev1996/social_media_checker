@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report List</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 32px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
+        .no-screenshot {
+            color: #777;
+            font-style: italic;
+        }
+
+        .no-reports {
+            text-align: center;
+            font-style: italic;
+            color: #777;
+            padding: 12px;
+        }
+
+        #popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+        }
+
+        #popup-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #popup h2 {
+            margin-top: 0;
+        }
+
+        #popup label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        #popup input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+        }
+
+        #popup button {
+            padding: 8px 16px;
+            margin-right: 8px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+       $(document).ready(function() {
+            var popup = $("#popup");
+            var reportUrl = $("#report-url");
+            var statusInput = $("#status-input");
+
+            $(".edit-button").click(function() {
+                var url = $(this).data("url");
+                reportUrl.text(url);
+                statusInput.val(""); // Clear the status input field
+                popup.fadeIn();
+                $("#update-button").data("url", url); // Update the data attribute for the update button
+            });
+
+            $("#close-button").click(function() {
+                popup.fadeOut();
+            });
+
+            $("#update-button").click(function() {
+                var newStatus = statusInput.val();
+                var url = $(this).data("url"); // Get the URL from the data attribute
+
+                // Send an AJAX request to update the status in the database
+                $.ajax({
+                    type: "POST",
+                    url: "/update_status/",
+                    data: {
+                        url: url,
+                        status: newStatus,
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    success: function(response) {
+                        // Handle the success response
+                        // You can update the UI or perform any necessary actions
+                        // For example, update the status in the table row
+                        // and close the popup
+                        // Modify the code based on your table structure
+                        var row = $(`.edit-button[data-url="${url}"]`).closest("tr");
+                        row.find(".status").text(newStatus);
+                        popup.fadeOut();
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle the error response
+                        // Display an error message or perform any necessary actions
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Facebook URL List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>SL NO.</th>
+                <th>Date</th>
+                <th>URL</th>
+                <th>Screenshot</th>
+                <th>Reason of Reporting</th>
+                <th>Specific Cause</th>
+                <th>Digital Act</th>
+                <th>Important Person Category</th>
+                <th>Priority Category</th>
+                <th>Sub Category</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in urls %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ report.date }}</td>
+                <td>{{ report.url }}</td>
+                <td>
+                    {% if report.screenshot_image %}
+                        <img src="{{ report.screenshot_image.url }}" alt="Screenshot">
+                    {% else %}
+                        <span class="no-screenshot">No Screenshot Available</span>
+                    {% endif %}
+                </td>
+                <td>{{ report.reason_of_reporting }}</td>
+                <td>{{ report.specific_cause }}</td>
+                <td>{{ report.digital_act }}</td>
+                <td>{{ report.imp_person_category }}</td>
+                <td>{{ report.priority_category }}</td>
+                <td>{{ report.subcategory }}</td>
+                <td class="status">{{ report.status }}</td>
+                <td>
+                    <button class="edit-button" data-url="{{ report.url }}">Edit</button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="12" class="no-reports">No reports available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="popup" style="display: none;">
+        <div id="popup-content">
+            <h2>Update Status</h2>
+            <p>URL: <span id="report-url"></span></p>
+            <label for="status-input">New Status:</label>
+            <input type="text" id="status-input">
+            <br>
+            <button id="update-button">Update</button>
+            <button id="close-button">Close</button>
+        </div>
+    </div>
+</body>
+</html>

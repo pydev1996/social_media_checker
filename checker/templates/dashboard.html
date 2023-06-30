@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background-color: white;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 20px;
+        }
+
+        .box {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .count {
+            font-size: 36px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #333333;
+        }
+
+        h1 {
+            color: #333333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .status-container {
+            margin-top: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .status-title {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #555555;
+        }
+
+        .status-count {
+            font-weight: bold;
+            color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    
+    <div class="dashboard-grid">
+        <div class="box" style="background-color: #ff9933; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #ffffff; font-size: 24px;">Total Links</h3>
+            <p class="count">{{ total }}</p>
+        </div>
+        <div class="box" style="background-color: #3399ff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #ffffff; font-size: 24px;">Facebook</h3>
+            <div class="status-container">
+                <div class="status-item">
+                    <span class="status-title">Total Links:</span>
+                    <span class="status-count">{{ fb_total_links }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Active:</span>
+                    <span class="status-count">{{ fb_on_count }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Blocked:</span>
+                    <span class="status-count">{{ fb_off_count }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Profile:</span>
+                    <span class="status-count">{{ profile }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Groups:</span>
+                    <span class="status-count">{{ groups }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Pages:</span>
+                    <span class="status-count">{{ pages }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="box" style="background-color: #66cc66; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #ffffff; font-size: 24px;">YouTube</h3>
+            <div class="status-container">
+                <div class="status-item">
+                    <span class="status-title">Total Links:</span>
+                    <span class="status-count">{{ youtube_total_links }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Active:</span>
+                    <span class="status-count">{{ youtube_on_count }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Blocked:</span>
+                    <span class="status-count">{{ youtube_off_count }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="box" style="background-color: #cc667c; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #ffffff; font-size: 24px;">TikToc</h3>
+            <div class="status-container">
+                <div class="status-item">
+                    <span class="status-title">Total Links:</span>
+                    <span class="status-count">{{ tiktoc_total_links }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Active:</span>
+                    <span class="status-count">{{ tiktoc_on_count }}</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-title">Blocked:</span>
+                    <span class="status-count">{{ tiktoc_off_count }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

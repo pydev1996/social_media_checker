@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TikTok URL Check</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="tiktok-url" data-url="{{ tiktok_url }}"></div>
+
+    <script>
+        var tiktokUrlElement = document.getElementById('tiktok-url');
+        var url = tiktokUrlElement.dataset.url;
+
+        // Make an AJAX request to check the TikTok URL
+        $.ajax({
+            url: '/check_tiktok_url/',
+            type: 'GET',
+            data: {url: url},
+            dataType: 'json',
+            success: function(response) {
+                if (response.result) {
+                    console.log('Content found');
+                    // Perform actions when content is found
+                } else {
+                    console.log('Content not found');
+                    // Perform actions when content is not found
+                }
+            },
+            error: function() {
+                console.log('Error occurred');
+                // Perform actions on error
+            }
+        });
+    </script>
+</body>
+</html>
