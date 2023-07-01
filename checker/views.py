@@ -69,6 +69,47 @@ from .forms import SocialMediaURLForm
 from .forms import facebookURLForm
 from .models import facebookURL
 
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.shortcuts import render, redirect
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('dashboard')  # Replace 'dashboard' with your desired redirect URL after successful login
+            else:
+                error_message = 'Invalid username or password'
+        else:
+            error_message = 'Invalid form submission'
+    else:
+        form = AuthenticationForm()
+        error_message = ''
+    
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'login.html', context)
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')  # Redirect to the login page after successful signup
+        else:
+            error_message = 'Invalid form submission'
+    else:
+        form = UserCreationForm()
+        error_message = ''
+    
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'signup.html', context)
+
+
 def add_socialmediaurl(request):
     if request.method == 'POST':
         form = SocialMediaURLForm(request.POST, request.FILES)
@@ -480,15 +521,28 @@ def download_excel(request):
         worksheet.cell(row=i, column=1, value=i - 1)
         worksheet.cell(row=i, column=2, value=report.date)
         worksheet.cell(row=i, column=3, value=report.whoposturl)
-        worksheet.cell(row=i, column=4, value=report.whoscreenshotimage.url if report.whoscreenshotimage else 'No Screenshot Available')
         worksheet.cell(row=i, column=5, value=report.hisposturl)
-        worksheet.cell(row=i, column=6, value=report.hisscreenshotimage.url if report.hisscreenshotimage else 'No Screenshot Available')
         worksheet.cell(row=i, column=7, value=report.reasonforreporting)
         worksheet.cell(row=i, column=8, value=report.specificcause)
         worksheet.cell(row=i, column=9, value=report.violated_law)
         worksheet.cell(row=i, column=10, value=report.proposed_action)
         worksheet.cell(row=i, column=11, value=report.status_date)
         worksheet.cell(row=i, column=12, value=report.status)
+        if report.whoscreenshotimage:
+            img = openpyxl.drawing.image.Image(report.whoscreenshotimage.path)
+            img.width = 80
+            img.height = 60
+            worksheet.column_dimensions[get_column_letter(4)].width = 20
+            worksheet.row_dimensions[i].height = 60
+            worksheet.add_image(img, f"D{i}")
+        if report.hisscreenshotimage:
+            img = openpyxl.drawing.image.Image(report.hisscreenshotimage.path)
+            img.width = 80
+            img.height = 60
+            worksheet.column_dimensions[get_column_letter(4)].width = 20
+            worksheet.row_dimensions[i].height = 60
+            worksheet.add_image(img, f"F{i}")
+
 
     # Create the HTTP response with the Excel file
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -500,5 +554,82 @@ def download_excel(request):
     return response
 
 
+#
+def weekly_checkup_all_list(request):
+    urls = SocialMediaURL.objects.all()
+    context = {'urls':urls}
+    return render(request, 'weekly_checkup_all_list.html',context)
+#
+import openpyxl
+from openpyxl.utils import get_column_letter
+from openpyxl.drawing.image import Image
+from openpyxl.styles import Alignment
 
+def download_facebookurl_list(request):
+    urls = facebookURL.objects.all()
+    context = {"urls": urls}
+    return render(request, 'downloadfacebookurl_list.html', context)
 
+def download_excel2(request):
+    urls = facebookURL.objects.all()
+
+    # Create a new workbook
+    workbook = openpyxl.Workbook()
+    worksheet = workbook.active
+
+    # Write table headers
+    headers = [
+        "SL NO.",
+        "Date",
+        "URL",
+        "Screenshot",
+        "Reason of Reporting",
+        "Specific Cause",
+        "Digital Act",
+        "Important Person Category",
+        "Priority Category",
+        "Sub Category",
+        "Status Date",
+        "Status",
+    ]
+
+    for col_num, header in enumerate(headers, 1):
+        col_letter = get_column_letter(col_num)
+        worksheet.column_dimensions[col_letter].width = 15
+        worksheet.cell(row=1, column=col_num, value=header).alignment = Alignment(horizontal='center', vertical='center')
+
+    # Write table data
+    for row_num, url in enumerate(urls, 2):
+        worksheet.cell(row=row_num, column=1, value=row_num - 1).alignment = Alignment(horizontal='center', vertical='center')
+        worksheet.cell(row=row_num, column=2, value=url.date)
+        worksheet.cell(row=row_num, column=3, value=url.url)
+        worksheet.cell(row=row_num, column=5, value=url.reason_of_reporting)
+        worksheet.cell(row=row_num, column=6, value=url.specific_cause)
+        worksheet.cell(row=row_num, column=7, value=url.digital_act)
+        worksheet.cell(row=row_num, column=8, value=url.imp_person_category)
+        worksheet.cell(row=row_num, column=9, value=url.priority_category)
+        worksheet.cell(row=row_num, column=10, value=url.subcategory)
+        worksheet.cell(row=row_num, column=11, value=url.status_date)
+        worksheet.cell(row=row_num, column=12, value=url.status)
+
+        if url.screenshot_image:
+            img = openpyxl.drawing.image.Image(url.screenshot_image.path)
+            img.width = 80
+            img.height = 60
+            worksheet.column_dimensions[get_column_letter(4)].width = 20
+            worksheet.row_dimensions[row_num].height = 60
+            worksheet.add_image(img, f"D{row_num}")
+
+    # Create a response with the Excel file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=facebook_urls.xlsx'
+
+    # Save the workbook to the response
+    workbook.save(response)
+
+    return response
+
+def weekly_check_facebookurl_list(request):
+    urls = facebookURL.objects.all()
+    context = {"urls": urls}
+    return render(request, 'weekly_check_facebookurl_list.html', context)

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report List</title>
+    <style>
+        body {
+            font-family: "Segoe UI",Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+        th {
+            background-color: #007bff;
+            color: #fff;
+            padding: 6px;
+            text-align: center;
+        }
+        td {
+            padding: 6px;
+            text-align: center;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-height: 50px;
+        }
+        .edit-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+        }
+        #popup-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        #popup h2 {
+            margin-top: 0;
+        }
+        #popup label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        #popup input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+        }
+        #popup button {
+            padding: 8px 16px;
+            margin-right: 8px;
+        }
+        /* Styling for tab buttons */
+/* Styling for tab buttons */
+.tablinks {
+    font-family: "Segoe UI",Arial, sans-serif;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.tablinks:hover {
+  background-color: #45a049;
+}
+
+.tablinks.active {
+  background-color: #aa05a2;
+  color: #fff;
+}
+
+/* Styling for edit button */
+.edit-button {
+  background-color: #ff5722;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.edit-button:hover {
+  background-color: #e64a19;
+}
+.button-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.refresh_button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+
+.button-container {
+    text-align:center;
+    margin:1em 0;
+}
+.refresh_button {
+    display: inline-block;
+    border:1px solid darken(#212121,50%);
+    outline:none;
+    padding:10px 20px;
+    line-height: 1.4;
+    background: #212121; 
+    background: linear-gradient(to bottom,  lighten(#212121,20%) 0%,lighten(#212121,15%) 50%,darken(#212121,5%) 51%,darken(#212121,2.5%) 100%);      
+    border-radius: 4px;
+    border: 1px solid darken(#212121,30%);
+    color:lighten(silver,10%);
+    text-shadow: darken(silver,80%) -1px -1px 0px;
+    
+    position: relative;
+    transition: padding-right .3s ease;
+    font-weight:700;
+    box-shadow:0 1px 0 lighten(#212121,30%) inset, 0px 1px 0 lighten(#212121,10%);
+    
+}
+
+.refresh_button:hover {
+    box-shadow:0 0 10px darken(#17eb81,10%) inset, 0px 1px 0 lighten(#212121,10%);
+    color:lighten(silver,20%);
+}
+
+.refresh_button:active{
+    box-shadow:0 0 10px darken(#212121,10%) inset, 0px 1px 0 lighten(#212121,10%);
+    color:lighten(silver,30%);
+    background: darken(#212121,10%); 
+    background: linear-gradient(to bottom,  lighten(#212121,10%) 0%,lighten(#212121,5%) 50%,darken(#212121,5%) 51%,darken(#212121,10%) 100%);  
+    
+}
+
+.refresh_button.spinning {
+    background-color: #212121;
+    padding-right: 40px;
+}
+.refresh_button.spinning:after {
+    content: '';
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    box-shadow: 0px 0px 0 1px darken(#212121,10%);
+    position: absolute;
+    border-radius: 50%;
+    animation: rotate360 .5s infinite linear, exist .1s forwards ease;
+}
+
+.refresh_button.spinning:before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    border-radius: 50%;
+    right: 6px;
+    top: 50%;
+    position: absolute;
+    border: 2px solid darken(#212121,40%);
+    border-right: 3px solid #27ae60;
+    animation: rotate360 .5s infinite linear, exist .1s forwards ease ;
+    
+}
+
+
+
+@keyframes rotate360 { 
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes exist { 
+    100% {
+        width: 15px;
+        height: 15px;
+        margin: -8px 5px 0 0;
+    }
+}
+
+
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var popup = $("#popup");
+            var urlInput = $("#url-input");
+            var statusInput = $("#status-input");
+
+            $(".edit-button").click(function() {
+                var url = $(this).data("url");
+                urlInput.val(url);
+                statusInput.val(""); // Clear the status input field
+                popup.fadeIn();
+            });
+
+            $("#close-button").click(function() {
+                popup.fadeOut();
+            });
+
+            $("#update-button").click(function() {
+                var url = urlInput.val();
+                var newStatus = statusInput.val();
+                // Send an AJAX request to update the status
+                $.ajax({
+                    type: "POST",
+                    url: "/update_status2/",
+                    data: {
+                        url: url,
+                        status: newStatus,
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    success: function(response) {
+                        // Handle the success response
+                        // You can update the UI or perform any necessary actions
+                        console.log(response);
+                        if (response.status === "success") {
+                            alert(response.message);
+                            // Reload the page or update the specific row in the table
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        // Handle the error case
+                        alert("An error occurred while updating the status.");
+                    }
+                });
+                popup.fadeOut();
+            });
+        });
+    </script>
+<script>
+    $(function(){
+    
+    var refresh_button = document.querySelector('.refresh_button');
+    
+    refresh_button.addEventListener("click", function() {
+        refresh_button.innerHTML = "Checking";
+        refresh_button.classList.add('spinning');
+        
+      setTimeout( 
+            function  (){  
+                refresh_button.classList.remove('spinning');
+                refresh_button.innerHTML = "Weekly check all links Status here";
+                
+            }, 6000);
+    }, false);
+    
+});
+</script> 
+   
+</head>
+<body>
+<h1>URL List</h1>
+<div class="button-container">
+    <button  class="refresh_button" onclick="refreshUrl()">Weekly check all links Status here</button>
+    
+</div>
+
+
+<div id="All" class="tabcontent">
+    <table>
+        <thead>
+            <tr>
+                <th>SL.NO.</th>
+                <th>Date</th>
+                <th>Who Post URL</th>
+                <th>Who Screenshot</th>
+                <th>His Post URL</th>
+                <th>His Screenshot</th>
+                <th>Reason for Reporting</th>
+                <th>Specific Cause</th>
+                <th>Violated Law</th>
+                <th>Proposed Action</th>
+                <th>Status date</th>
+                <th>Status</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in urls %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ report.date }}</td>
+                <td>{{ report.whoposturl }}</td>
+                <td>
+                    {% if report.whoscreenshotimage %}
+                        <img src="{{ report.whoscreenshotimage.url }}" alt="Who Screenshot">
+                    {% else %}
+                        No Screenshot Available
+                    {% endif %}
+                </td>
+                <td>{{ report.hisposturl }}</td>
+                <td>
+                    {% if report.hisscreenshotimage %}
+                        <img src="{{ report.hisscreenshotimage.url }}" alt="His Screenshot">
+                    {% else %}
+                        No Screenshot Available
+                    {% endif %}
+                </td>
+                <td>{{ report.reasonforreporting }}</td>
+                <td>{{ report.specificcause }}</td>
+                <td>{{ report.violated_law }}</td>
+                <td>{{ report.proposed_action }}</td>
+                <td>{{ report.status_date }}</td>
+                <td>{{ report.status }}</td>
+              
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="12">No reports available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Function to get CSRF token from cookies
+        function getCSRFToken() {
+            var cookieValue = null;
+            var name = 'csrftoken';
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+            return cookieValue;
+        }
+
+        // Refresh button click event handler
+        function refreshUrl() {
+            var csrftoken = getCSRFToken();  // Get CSRF token
+            var url = '/refresh-url/';  // Replace with the actual URL of your refresh URL endpoint
+
+            // Send AJAX request
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },  // Include CSRF token in headers
+                success: function(response) {
+                    console.log('Refresh successful');
+                },
+                error: function(error) {
+                    console.error('Refresh failed', error);
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

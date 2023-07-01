@@ -57,96 +57,181 @@
             font-weight: bold;
             color: #333333;
         }
+        /* CSS styles for the sidebar menu */
+.w3-sidebar {
+  background-color: #f4f4f4;
+  width: 20%;
+  padding: 20px;
+}
+
+.w3-sidebar h3 {
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.w3-sidebar a {
+  display: block;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: #555;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.w3-sidebar a:hover {
+  background-color: #ddd;
+}
+
+.w3-sidebar a.active {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+/* Additional styles for a colorful and stylish design */
+.w3-sidebar {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.w3-sidebar h3 {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.w3-sidebar a {
+  background-color: #fff;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.w3-sidebar a:hover {
+  background-color: #f2f2f2;
+}
+
+.w3-sidebar a.active {
+  background-color: #45a049;
+}
+
     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
-    <h1>Dashboard</h1>
-    
-    <div class="dashboard-grid">
-        <div class="box" style="background-color: #ff9933; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <h3 style="color: #ffffff; font-size: 24px;">Total Links</h3>
-            <p class="count">{{ total }}</p>
-        </div>
-        <div class="box" style="background-color: #3399ff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <h3 style="color: #ffffff; font-size: 24px;">Facebook</h3>
-            <div class="status-container">
-                <div class="status-item">
-                    <span class="status-title">Total Links:</span>
-                    <span class="status-count">{{ fb_total_links }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Active:</span>
-                    <span class="status-count">{{ fb_on_count }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Blocked:</span>
-                    <span class="status-count">{{ fb_off_count }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Profile:</span>
-                    <span class="status-count">{{ profile }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Groups:</span>
-                    <span class="status-count">{{ groups }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Pages:</span>
-                    <span class="status-count">{{ pages }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="box" style="background-color: #66cc66; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <h3 style="color: #ffffff; font-size: 24px;">YouTube</h3>
-            <div class="status-container">
-                <div class="status-item">
-                    <span class="status-title">Total Links:</span>
-                    <span class="status-count">{{ youtube_total_links }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Active:</span>
-                    <span class="status-count">{{ youtube_on_count }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Blocked:</span>
-                    <span class="status-count">{{ youtube_off_count }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="box" style="background-color: #cc667c; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <h3 style="color: #ffffff; font-size: 24px;">TikToc</h3>
-            <div class="status-container">
-                <div class="status-item">
-                    <span class="status-title">Total Links:</span>
-                    <span class="status-count">{{ tiktoc_total_links }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Active:</span>
-                    <span class="status-count">{{ tiktoc_on_count }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Blocked:</span>
-                    <span class="status-count">{{ tiktoc_off_count }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="box" style="background-color: #ec2d0b; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            <h3 style="color: #ffffff; font-size: 24px;">Twitter</h3>
-            <div class="status-container">
-                <div class="status-item">
-                    <span class="status-title">Total Links:</span>
-                    <span class="status-count">{{ twitter_total_links }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Active:</span>
-                    <span class="status-count">{{ twitter_on_count }}</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-title">Blocked:</span>
-                    <span class="status-count">{{ twitter_off_count }}</span>
-                </div>
-            </div>
-        </div>
+        <!-- Sidebar -->
+    <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:20%">
+        <h3 class="w3-bar-item">Menu</h3>
+        <a href="dashboard/" class="w3-bar-item w3-button">Dashboard</a>
+        <a href="checker/" class="w3-bar-item w3-button">Enter Youtube/Twitter/TikToc URL</a>
+        <a href="urls/" class="w3-bar-item w3-button">All Youtube/Twitter/TikToc URL Links</a>
+        <a href="results_all/" class="w3-bar-item w3-button">Result Of All Youtube/Twitter/TikToc URL Links</a>
+        <a href="download_all_links/" class="w3-bar-item w3-button">Download Daily Report For Youtube/Twitter/TikToc URL Links</a>
+        <a href="weekly_checkup_all_list/" class="w3-bar-item w3-button">Weekly All Youtube/Twitter/TikToc URL Links</a>
+        <a href="addfburl/" class="w3-bar-item w3-button">Add FaceBook URL</a>
+        <a href="urls2" class="w3-bar-item w3-button">All FaceBook URL</a>
+        <a href="download_facebookurl_list/" class="w3-bar-item w3-button">Download Report FaceBook URL</a>
+        <a href="#" class="w3-bar-item w3-button">Monthly Report FaceBook URL</a>
+        <a href="weekly_check_facebookurl_list/" class="w3-bar-item w3-button">Weekly FaceBook URL</a>
+        <a href="/" class="w3-bar-item w3-button">LogOut</a>
+       
     </div>
+    
+    <!-- Page Content -->
+    <div style="margin-left:23%">
+    
+    <div class="w3-container w3-teal">
+        <h1> BTRC Work Station</h1>
+    
+    
+    
+            <div class="dashboard-grid">
+                <div class="box" style="background-color: #ff9933; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <h3 style="color: #ffffff; font-size: 24px;">Total Links</h3>
+                    <p class="count">{{ total }}</p>
+                </div>
+                <div class="box" style="background-color: #3399ff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <h3 style="color: #ffffff; font-size: 24px;">Facebook</h3>
+                    <div class="status-container">
+                        <div class="status-item">
+                            <span class="status-title">Total Links:</span>
+                            <span class="status-count">{{ fb_total_links }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Active:</span>
+                            <span class="status-count">{{ fb_on_count }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Blocked:</span>
+                            <span class="status-count">{{ fb_off_count }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Profile:</span>
+                            <span class="status-count">{{ profile }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Groups:</span>
+                            <span class="status-count">{{ groups }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Pages:</span>
+                            <span class="status-count">{{ pages }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="box" style="background-color: #66cc66; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <h3 style="color: #ffffff; font-size: 24px;">YouTube</h3>
+                    <div class="status-container">
+                        <div class="status-item">
+                            <span class="status-title">Total Links:</span>
+                            <span class="status-count">{{ youtube_total_links }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Active:</span>
+                            <span class="status-count">{{ youtube_on_count }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Blocked:</span>
+                            <span class="status-count">{{ youtube_off_count }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="box" style="background-color: #cc667c; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <h3 style="color: #ffffff; font-size: 24px;">TikToc</h3>
+                    <div class="status-container">
+                        <div class="status-item">
+                            <span class="status-title">Total Links:</span>
+                            <span class="status-count">{{ tiktoc_total_links }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Active:</span>
+                            <span class="status-count">{{ tiktoc_on_count }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Blocked:</span>
+                            <span class="status-count">{{ tiktoc_off_count }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="box" style="background-color: #ec2d0b; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <h3 style="color: #ffffff; font-size: 24px;">Twitter</h3>
+                    <div class="status-container">
+                        <div class="status-item">
+                            <span class="status-title">Total Links:</span>
+                            <span class="status-count">{{ twitter_total_links }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Active:</span>
+                            <span class="status-count">{{ twitter_on_count }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-title">Blocked:</span>
+                            <span class="status-count">{{ twitter_off_count }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 </body>
 </html>
