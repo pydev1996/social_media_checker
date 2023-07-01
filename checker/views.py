@@ -633,16 +633,42 @@ def weekly_check_facebookurl_list(request):
     urls = facebookURL.objects.all()
     context = {"urls": urls}
     return render(request, 'weekly_check_facebookurl_list.html', context)
-
+from django.shortcuts import render
+from datetime import datetime
+from django.db.models import Count
 from django.db.models import Count, Q
 
+from datetime import datetime, timedelta
 
+from datetime import datetime, timedelta
 
+def monthly_report(request):
+    current_month = datetime.now().month
+    current_year = datetime.now().year
 
+    prev_month = datetime.now().replace(day=1) - timedelta(days=1)
+    prev_month_report_data = facebookURL.objects.filter(date__month=prev_month.month, date__year=prev_month.year).values('priority_category').annotate(
+        prev_month_id_count=Count('subcategory', filter=models.Q(subcategory='ID')),
+        prev_month_page_count=Count('subcategory', filter=models.Q(subcategory='Page')),
+        prev_month_group_count=Count('subcategory', filter=models.Q(subcategory='Group')),
+        prev_month_links_count=Count('subcategory', filter=models.Q(subcategory='Links'))
+    )
 
+    report_data = facebookURL.objects.filter(date__month=current_month, date__year=current_year).values('priority_category').annotate(
+        id_count=Count('subcategory', filter=models.Q(subcategory='ID')),
+        page_count=Count('subcategory', filter=models.Q(subcategory='Page')),
+        group_count=Count('subcategory', filter=models.Q(subcategory='Group')),
+        links_count=Count('subcategory', filter=models.Q(subcategory='Links'))
+    )
+
+    context = {
+        'report_data': report_data,
+        'prev_month_report_data': prev_month_report_data
+    }
+    return render(request, 'monthly_report.html', context)
 from django.shortcuts import render
 from datetime import date, timedelta
-from django.db.models import Count
+from django.db.models import Count, Sum
 from .models import facebookURL
 
 def monthly_report(request):
@@ -664,7 +690,11 @@ def monthly_report(request):
             'prev_month_id_count': 0,
             'prev_month_page_count': 0,
             'prev_month_group_count': 0,
-            'prev_month_links_count': 0
+            'prev_month_links_count': 0,
+            'cumulative_id_count': 0,
+            'cumulative_page_count': 0,
+            'cumulative_group_count': 0,
+            'cumulative_links_count': 0
         }
 
         # Get current month data for the priority category
@@ -698,6 +728,12 @@ def monthly_report(request):
                 category_data['prev_month_group_count'] = count
             elif subcategory == 'Links':
                 category_data['prev_month_links_count'] = count
+
+        # Calculate cumulative counts
+        category_data['cumulative_id_count'] = category_data['id_count'] + category_data['prev_month_id_count']
+        category_data['cumulative_page_count'] = category_data['page_count'] + category_data['prev_month_page_count']
+        category_data['cumulative_group_count'] = category_data['group_count'] + category_data['prev_month_group_count']
+        category_data['cumulative_links_count'] = category_data['links_count'] + category_data['prev_month_links_count']
 
         report_data.append(category_data)
 

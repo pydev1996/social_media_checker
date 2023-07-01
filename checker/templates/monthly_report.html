@@ -28,6 +28,7 @@
             <th>Priority Category</th>
             <th>Current Month</th>
             <th>Previous Month</th>
+            <th>Cumulative</th>
         </tr>
         {% for category in report_data %}
         <tr>
@@ -46,6 +47,14 @@
                     <li>Pages: {{ category.prev_month_page_count }}</li>
                     <li>Groups: {{ category.prev_month_group_count }}</li>
                     <li>Links: {{ category.prev_month_links_count }}</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>ID: {{ category.cumulative_id_count }}</li>
+                    <li>Pages: {{ category.cumulative_page_count }}</li>
+                    <li>Groups: {{ category.cumulative_group_count }}</li>
+                    <li>Links: {{ category.cumulative_links_count }}</li>
                 </ul>
             </td>
         </tr>
