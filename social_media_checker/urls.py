@@ -10,7 +10,7 @@ from checker.views import update_status2
 from checker.views import refresh_url
 from checker.views import refresh2
 from checker.views import results_all
-from checker.views import downloadreport_all_links
+from checker.views import downloadreport_all_links,monthly_report
 from checker.views import download_excel
 from checker.views import weekly_checkup_all_list,download_facebookurl_list,download_excel2,weekly_check_facebookurl_list
 from checker.views import login_view, signup_view
@@ -33,8 +33,11 @@ urlpatterns = [
     path('dashboard/weekly_checkup_all_list/', weekly_checkup_all_list, name='weekly_checkup_all_list'),
     path('dashboard/download_facebookurl_list/',download_facebookurl_list,name='download_facebookurl_list'),
     path('download/excel/', download_excel2, name='download_excel2'),
-    path('dashboard/weekly_check_facebookurl_list/',weekly_check_facebookurl_list,name='weekly_check_facebookurl_list')
+    path('dashboard/weekly_check_facebookurl_list/',weekly_check_facebookurl_list,name='weekly_check_facebookurl_list'),
+    path('dashboard/monthly_report/', monthly_report, name='monthly_report'),
+
 ]
+
 
 from django.conf import settings
 from django.conf.urls.static import static

@@ -633,3 +633,78 @@ def weekly_check_facebookurl_list(request):
     urls = facebookURL.objects.all()
     context = {"urls": urls}
     return render(request, 'weekly_check_facebookurl_list.html', context)
+
+from django.db.models import Count, Q
+
+
+
+
+
+from django.shortcuts import render
+from datetime import date, timedelta
+from django.db.models import Count
+from .models import facebookURL
+
+def monthly_report(request):
+    current_month = date.today().month
+    current_year = date.today().year
+    prev_month = date.today() - timedelta(days=30)  # Assuming 30 days in a month
+
+    # Get all distinct priority categories from the model
+    priority_categories = facebookURL.objects.values_list('priority_category', flat=True).distinct()
+
+    report_data = []
+    for category in priority_categories:
+        category_data = {
+            'priority_category': category,
+            'id_count': 0,
+            'page_count': 0,
+            'group_count': 0,
+            'links_count': 0,
+            'prev_month_id_count': 0,
+            'prev_month_page_count': 0,
+            'prev_month_group_count': 0,
+            'prev_month_links_count': 0
+        }
+
+        # Get current month data for the priority category
+        current_month_data = facebookURL.objects.filter(priority_category=category, date__month=current_month, date__year=current_year).values('subcategory').annotate(
+            count=Count('subcategory')
+        )
+        for data in current_month_data:
+            subcategory = data['subcategory']
+            count = data['count']
+            if subcategory == 'ID':
+                category_data['id_count'] = count
+            elif subcategory == 'Page':
+                category_data['page_count'] = count
+            elif subcategory == 'Group':
+                category_data['group_count'] = count
+            elif subcategory == 'Links':
+                category_data['links_count'] = count
+
+        # Get previous month data for the priority category
+        prev_month_data = facebookURL.objects.filter(priority_category=category, date__month=prev_month.month, date__year=prev_month.year).values('subcategory').annotate(
+            count=Count('subcategory')
+        )
+        for data in prev_month_data:
+            subcategory = data['subcategory']
+            count = data['count']
+            if subcategory == 'ID':
+                category_data['prev_month_id_count'] = count
+            elif subcategory == 'Page':
+                category_data['prev_month_page_count'] = count
+            elif subcategory == 'Group':
+                category_data['prev_month_group_count'] = count
+            elif subcategory == 'Links':
+                category_data['prev_month_links_count'] = count
+
+        report_data.append(category_data)
+
+    context = {
+        'current_month': current_month,
+        'current_year': current_year,
+        'report_data': report_data
+    }
+
+    return render(request, 'monthly_report.html', context)

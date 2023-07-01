@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monthly Report</title>
+    <style>
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .report-table th,
+        .report-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .report-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Monthly Report - {{ current_month }}/{{ current_year }}</h2>
+    
+    <table class="report-table">
+        <tr>
+            <th>Priority Category</th>
+            <th>Current Month</th>
+            <th>Previous Month</th>
+        </tr>
+        {% for category in report_data %}
+        <tr>
+            <td>{{ category.priority_category }}</td>
+            <td>
+                <ul>
+                    <li>ID: {{ category.id_count }}</li>
+                    <li>Pages: {{ category.page_count }}</li>
+                    <li>Groups: {{ category.group_count }}</li>
+                    <li>Links: {{ category.links_count }}</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>ID: {{ category.prev_month_id_count }}</li>
+                    <li>Pages: {{ category.prev_month_page_count }}</li>
+                    <li>Groups: {{ category.prev_month_group_count }}</li>
+                    <li>Links: {{ category.prev_month_links_count }}</li>
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -30,8 +30,24 @@ class facebookURL(models.Model):
     specific_cause = models.TextField()
     digital_act = models.TextField()
     imp_person_category = models.CharField(max_length=100)
-    priority_category = models.CharField(max_length=100)
-    subcategory=models.CharField(max_length=50,default='',null=True)
+    PRIORITY_CATEGORIES = [
+        ("Fake Facebook Accounts in the name of the Bangladesh Army", "Fake Facebook Accounts in the name of the Bangladesh Army"),
+        ("Fake Facebook Accounts in the name of the Bangladesh Navy", "Fake Facebook Accounts in the name of the Bangladesh Navy"),
+        ("Fake Facebook Accounts in the name of Rapid Action Battalion", "Fake Facebook Accounts in the name of Rapid Action Battalion"),
+        ("Fake Facebook Accounts in the name of the Bangladesh AirForce", "Fake Facebook Accounts in the name of the Bangladesh AirForce"),
+        ("Anti-State Facebook Accounts related to Chittagong Hill Tracks", "Anti-State Facebook Accounts related to Chittagong Hill Tracks"),
+        ("Anti-State Facebook Accounts of Terrorism/Harassment/Religious incitement and others", "Anti-State Facebook Accounts of Terrorism/Harassment/Religious incitement and others"),
+    ]
+
+    priority_category = models.CharField(max_length=100, choices=PRIORITY_CATEGORIES)
+    SUBCATEGORIES = [
+        ('ID', 'ID'),
+        ('Page', 'Page'),
+        ('Group', 'Group'),
+        ('Links', 'Links'),
+    ]
+
+    subcategory = models.CharField(max_length=50, default='', null=True, choices=SUBCATEGORIES)
     status_date = models.CharField(max_length=50,default=d1,null=True)
     status = models.CharField(max_length=50,default='',null=True)
     def __str__(self):
