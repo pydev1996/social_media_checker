@@ -19,21 +19,21 @@ urlpatterns = [
     path('', login_view, name='login'),
     path('signup/', signup_view, name='signup'),
     path('dashboard/', dashboard, name='dashboard'),
-    path('checker/', add_socialmediaurl, name='add_socialmediaurl'),
-    path('addfburl/', add_facebookURL, name='add_facebookURL'),
-    path('urls/', socialmediaurl_list, name='socialmediaurl_list'),
+    path('dashboard/checker/', add_socialmediaurl, name='add_socialmediaurl'),
+    path('dashboard/addfburl/', add_facebookURL, name='add_facebookURL'),
+    path('dashboard/urls/', socialmediaurl_list, name='socialmediaurl_list'),
     path('refresh-url/', refresh_url, name='refresh_url'),
     path('refresh-url2/', refresh2, name='refresh2'),
-    path('urls2/',facebookurl_list,name='facebookurl_list'),
-    path('results_all/',results_all,name='results_all'),
+    path('dashboard/urls2/',facebookurl_list,name='facebookurl_list'),
+    path('dashboard/results_all/',results_all,name='results_all'),
     path('update_status/',update_status,name='update_status'),
     path('update_status2/',update_status2,name='update_status2'),
-    path('download_all_links/',downloadreport_all_links,name='downloadreport_all_links'),
+    path('dashboard/download_all_links/',downloadreport_all_links,name='downloadreport_all_links'),
     path('download-excel/', download_excel, name='download_excel'),
-    path('weekly_checkup_all_list/', weekly_checkup_all_list, name='weekly_checkup_all_list'),
-    path('download_facebookurl_list/',download_facebookurl_list,name='download_facebookurl_list'),
+    path('dashboard/weekly_checkup_all_list/', weekly_checkup_all_list, name='weekly_checkup_all_list'),
+    path('dashboard/download_facebookurl_list/',download_facebookurl_list,name='download_facebookurl_list'),
     path('download/excel/', download_excel2, name='download_excel2'),
-    path('weekly_check_facebookurl_list/',weekly_check_facebookurl_list,name='weekly_check_facebookurl_list')
+    path('dashboard/weekly_check_facebookurl_list/',weekly_check_facebookurl_list,name='weekly_check_facebookurl_list')
 ]
 
 from django.conf import settings
